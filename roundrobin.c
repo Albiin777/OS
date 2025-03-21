@@ -1,68 +1,48 @@
 #include <stdio.h>
-
-int main() {
-    int n, i, tq, total_wt = 0, total_tat = 0, totalpc = 0;
-    float avg_tat, avg_wt;
-    
-    printf("Enter Number of processes: ");
-    scanf("%d", &n);
-    
-    int at[n], bt[n], wt[n], ret[n], tat[n], ct[n];
-    
-    for (i = 0; i < n; i++) {
-        printf("Process %d\n", i + 1);
-        printf("Enter Arrival time: ");
-        scanf("%d", &at[i]);
-        printf("Enter Burst time: ");
-        scanf("%d", &bt[i]);
-        ret[i] = bt[i];  // Remaining time initialized to burst time
-        wt[i] = 0;       // Initialize waiting time to zero
+int main()
+{
+int n, i, j, time_quantum, total_waiting_time = 0, total_turnaround_time = 0,
+total_processes_completed = 0;
+float avg_turnaround_time, avg_waiting_time;
+printf("Enter the number of processes: ");
+scanf("%d", &n);
+int burst_time[n], arrival_time[n], remaining_time[n], waiting_time[n],
+turnaround_time[n];
+printf("Enter the burst time and arrival time for each process:\n");
+for (i = 0; i < n; i++) {
+    printf("Burst time for process %d: ", i + 1);
+    scanf("%d", &burst_time[i]);
+    printf("Arrival time for process %d: ", i + 1);
+    scanf("%d", &arrival_time[i]);
+    remaining_time[i] = burst_time[i];
     }
-    
-    printf("Enter time quantum: ");
-    scanf("%d", &tq);
-    
-    int current_time = 0;
-    
-    while (totalpc < n) {
-        int done = 1; // Check if all processes are completed
-        
+printf("Enter the time quantum: ");
+scanf("%d", &time_quantum);
+int current_time = 0;
+while (total_processes_completed < n) {
         for (i = 0; i < n; i++) {
-            if (ret[i] > 0 && at[i] <= current_time) {
-                done = 0;  // At least one process is still running
-                
-                if (ret[i] <= tq) {
-                    current_time += ret[i];
-                    ct[i] = current_time; // Store Completion Time
-                    tat[i] = ct[i] - at[i]; // Turnaround Time
-                    wt[i] = tat[i] - bt[i]; // Waiting Time
-                    
-                    total_tat += tat[i];
-                    total_wt += wt[i];
-                    
-                    ret[i] = 0; // Process is completed
-                    totalpc++; 
-                } else {
-                    current_time += tq;
-                    ret[i] -= tq;
-                }
+            if (remaining_time[i] > 0 && arrival_time[i] <= current_time) {
+                if (remaining_time[i] <= time_quantum) {
+                    current_time += remaining_time[i];
+                    turnaround_time[i] = current_time - arrival_time[i];
+                    total_turnaround_time += turnaround_time[i];
+                    remaining_time[i] = 0;
+                    total_waiting_time += turnaround_time[i] - burst_time[i];
+                    total_processes_completed++;
+                    } 
+                else {
+                    current_time += time_quantum;
+                    remaining_time[i] -= time_quantum;
+                    }
             }
-        }
-        
-        if (done) break; // Exit if all processes are completed
+            }
     }
-    
-    avg_tat = (float) total_tat / n;
-    avg_wt = (float) total_wt / n;
-    
-    // Printing results
-    printf("\nProcess\tBurst Time\tArrival Time\tCompletion Time\tTurnaround Time\tWaiting Time\n");
-    for (i = 0; i < n; i++) {
-        printf("%d\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i + 1, bt[i], at[i], ct[i], tat[i], wt[i]);
-    }
-    
-    printf("\nAverage Turnaround Time: %.2f\n", avg_tat);
-    printf("Average Waiting Time: %.2f\n", avg_wt);
-    
-    return 0;
+avg_turnaround_time = (float)total_turnaround_time / n;
+avg_waiting_time = (float)total_waiting_time / n;
+printf("\nProcess\tBurst Time\tArrival Time\tTurnaround Time\tWaiting Time\n");
+for (i = 0; i < n; i++) {
+    printf("%d\t%d\t\t%d\t\t%d\t\t%d\n", i + 1, burst_time[i], arrival_time[i],turnaround_time[i], turnaround_time[i] - burst_time[i]);}
+printf("\nAverage Turnaround Time: %.2f\n", avg_turnaround_time);
+printf("Average Waiting Time: %.2f\n", avg_waiting_time);
+return 0;
 }
