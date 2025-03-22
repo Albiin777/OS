@@ -1,71 +1,58 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 int main() {
-    int n, i, temp, j;
-    int total_wt = 0, total_tat = 0;
-    float avg_wt, avg_tat;
-
+    int n;
     printf("Enter number of processes: ");
     scanf("%d", &n);
+    
+    int bt[n], at[n], pr[n], wt[n], tat[n], ct[n];
+    bool completed[n];
+    int i, total_wt = 0, total_tat = 0, completed_count = 0, current_time = 0;
 
-    int at[n], bt[n], wt[n], tat[n], ct[n], prio[n];
     for (i = 0; i < n; i++) {
-        printf("Process %d\n", i + 1);
-        printf("Enter Arrival time: ");
-        scanf("%d", &at[i]);
-        printf("Enter Burst time: ");
-        scanf("%d", &bt[i]);
-        printf("Enter Priority: ");
-        scanf("%d", &prio[i]);
+        printf("Enter arrival and burst time for process %d: ", i + 1);
+        scanf("%d %d", &at[i], &bt[i]);
+        printf("Enter priority for process %d: ", i + 1);
+        scanf("%d", &pr[i]);
+        completed[i] = false;
     }
 
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n - i - 1; j++) {
-            if (at[j] > at[j + 1]) {
-                temp = at[j];
-                at[j] = at[j + 1];
-                at[j + 1] = temp;
-
-                temp = bt[j];
-                bt[j] = bt[j + 1];
-                bt[j + 1] = temp;
-
-                temp = prio[j];
-                prio[j] = prio[j + 1];
-                prio[j + 1] = temp;
+    while (completed_count < n) {
+        int highest_priority = 9999, index = -1;
+        for (i = 0; i < n; i++) {
+            if (!completed[i] && at[i] <= current_time && pr[i] < highest_priority) {
+                highest_priority = pr[i];
+                index = i;
             }
+        }
+        
+        if (index == -1) {
+            current_time++;
+        } else {
+            ct[index] = current_time + bt[index];
+            current_time = ct[index];
+            tat[index] = ct[index] - at[index];
+            wt[index] = tat[index] - bt[index];
+            completed[index] = true;
+            completed_count++;
+            total_wt += wt[index];
+            total_tat += tat[index];
         }
     }
 
-    ct[0] = bt[0] + at[0];
-    tat[0] = ct[0] - at[0];
-    wt[0] = tat[0] - bt[0];
-
-    total_wt += wt[0];
-    total_tat += tat[0];
-
-    for (i = 1; i < n; i++) {
-        ct[i] = ct[i - 1] + bt[i];
-        tat[i] = ct[i] - at[i];
-        wt[i] = tat[i] - bt[i];
-
-        total_wt += wt[i];
-        total_tat += tat[i];
-    }
-
-    avg_wt = (float)total_wt / n;
-    avg_tat = (float)total_tat / n;
-
-    printf("\nPROCESS\tARRIVAL TIME\tBURST TIME\tPRIORITY\tCOMPLETION TIME\tWAITING TIME\tTURNAROUND TIME\n");
+    printf("\nProcess\tPriority\tBurst Time\tArrival Time\tCompletion Time\tTurnaround Time\tWaiting Time\n");
     for (i = 0; i < n; i++) {
-        printf("%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i + 1, at[i], bt[i], prio[i], ct[i], wt[i], tat[i]);
+        printf("%d\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i + 1, pr[i], bt[i], at[i], ct[i], tat[i], wt[i]);
     }
 
-    printf("\nAverage waiting time: %.2f\n", avg_wt);
-    printf("Average Turnaround time: %.2f\n", avg_tat);
-
+    printf("\nAverage Turnaround Time: %.2f\n", (float)total_tat / n);
+    printf("Average Waiting Time: %.2f\n", (float)total_wt / n);
+    
     return 0;
 }
+
+
 
 
 
