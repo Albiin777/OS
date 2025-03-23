@@ -4,18 +4,20 @@
 void firstfit(int b[], int f[], int nb, int nf)
 {
     int i, j, flag;
+    printf("\nprocess no. \tprocess size\tblock size\n");
     for (i = 0; i < nf; i++) {
         flag = 0;
+        printf("%d\t\t %d\t\t",i+1,f[i]);
         for (j = 0; j < nb; j++) {
             if (b[j] >= f[i]) {
-                printf("\nFile Size %d is put in Block of size %d", f[i], b[j]);
+                printf(" %d \n",b[j]);
                 b[j] = 0;
                 flag = 1;
                 break;
             }
         }
         if (flag == 0)
-            printf("\nFile Size %d must Wait", f[i]);
+            printf("Wait\n");
     }
 }
 
