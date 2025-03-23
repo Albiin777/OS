@@ -1,5 +1,4 @@
 #include <stdio.h>
-#define max 25
 
 void firstfit(int b[], int f[], int nb, int nf)
 {
@@ -24,12 +23,13 @@ void firstfit(int b[], int f[], int nb, int nf)
 int main()
 {
     int i, nb, nf;
-    int b[max], f[max];
     printf("Memory Management Scheme - First Fit\n");
     printf("Enter the number of blocks: ");
     scanf("%d", &nb);
     printf("Enter the number of files: ");
     scanf("%d", &nf);
+    int b[nb], f[nf];
+
     printf("Enter the size of the blocks:\n");
     for (i = 0; i < nb; i++) {
         printf("Block %d: ", i + 1);
