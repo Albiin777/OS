@@ -31,7 +31,7 @@ int main() {
     // Process until all processes are completed
     while (completed != n) {
         // Find the process with minimum burst time among the processes that have arrived
-        int minBurstTime = __INT_MAX__;
+        int minBurstTime = __INT_MAX__;                                                         
         int selectedProcess = -1;
         
         for (int i = 0; i < n; i++) {
