@@ -47,11 +47,11 @@ int main() {
         }
     }
    
-    for (int i = 0; i < num_processes; i++) {
+    /*for (int i = 0; i < num_processes; i++) {
         for (int j = 0; j < num_resources; j++) {
             work[j] = available[j];
         }
-    }
+    }*/
    
     int finish[MAX_PROCESSES] = {0};
     int safe_sequence[MAX_PROCESSES];
@@ -86,13 +86,13 @@ int main() {
         if (!found) {
             printf("System is in an unsafe state (potential deadlock).\n");
            
-            printf("Processes that could not be allocated resources: ");
+           /* printf("Processes that could not be allocated resources: ");
             for (int i = 0; i < num_processes; i++) {
                 if (!finish[i]) {
                     printf("P%d ", i);
                 }
             }
-            printf("\n");
+            printf("\n");*/
            
             return 0;
         }
@@ -100,10 +100,10 @@ int main() {
    
     printf("System is in a safe state.\nSafe sequence: ");
     for (int i = 0; i < num_processes; i++) {
-        printf("P%d", safe_sequence[i]);
-        if (i < num_processes - 1) {
+        printf("P%d ", safe_sequence[i]);
+        /*if (i < num_processes - 1) {
             printf(" ");
-        }
+        }*/
     }
     printf("\n");
    
